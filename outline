@@ -1,0 +1,210 @@
+PAPER OUTLINE
+
+Introduction
+1.1 Motivation
+- Natural language key from both engineering and scientific points of view
+    - need to be able to interact w machines
+    - unique to humans 
+- We'd like to understand the computational processes behind language
+    - for both abovementioned
+- Current language systems (mostly HMM and Deep-learning based) perform best in small subset of languages where large amounts of labelled training data exist
+    - vast majority of the world's languages: not the case
+    - even where does exist, lack of good training data can be problem
+- More importantly: people do not do supervised learning
+    - we need much less data, are much better
+    - points to unsupervised learning as potential solution
+    - allows us to incorporate different theories abt language/cognition into learning model
+
+1.2 The Problem
+- We're looking at lexical discovery, as done in Lee 2015
+    - how do we learn to distinguish words from continuous language input?
+    - model unique in that it tries to learn phones, morphemes, and words in same model
+    - in this sense, is a "joint model" which concomitantly tries to model multiple interrelated phenomena 
+    - joint learning has been shown to improve model accuracy (cite Johnson)
+
+1.3 The Original Model
+- model uses Bayesian inference
+    - trying to infer posterior distribution on latent variables in model from data and prior assumptions  
+        - TODO: more about latent variable models, etc. 
+    - TODO: introduce generative model
+    - very powerful method, lets you update theory according to evidence and incorporate your knowledge about the model, but gives rise to inference problem
+        - TODO: explain inference problem, in marginal likelihood
+    - in 2015 paper, sampling used
+        - briefly explain sampling
+    - sampling slow and hard to parallelize (cite Zhai 2014) -- not scalable to kinds of large datasets that we have, esp when it comes to raw audio input (more audio data exists than you could process)
+    - how do you make this faster?
+
+1.4 Variational Bayes
+- overview:
+    - re-casts inference challenge as optimization problem
+    - allows iterative optimization of an approximation of posterior 
+    - lends itself to parallelization across multiple cores and interfacing with tools such as MapReduce framework
+    - much faster to converge than sampling without significant reduction in accuracy
+1.4.1 ELBO
+    - show math behind deriving ELBO (TODO: copy/reduce wiki material)
+        - explain expected value wrt to variable
+        - then results (rest in appendix)
+    - elbo is evidence lower bound 
+    - is a lower bound on variational distribution which approximates posterior (that which we cannot compute) from the generative model (which we can compute)
+    - ultimate goal -- get lower bound as close to real posterior as you can 
+        - show when this happens, KL = 0 i.e. distributions are the same
+    - show lower bound for generative model
+
+1.4.2 Mean Field 
+- one main reason computing posterior impossible: conditional dependencies when you try to reverse the model
+    - maybe give an example?
+- solution: mean field method
+    - grew out of physics literature
+    - idea: since q(z) is approx., break dependence assumptions
+    - q(z) = \prod q(z_i)
+    - will allow you to iteratively update each q(z_i) while holding others constant
+
+1.4.3 Exponential family
+- many dists. are exponential family
+- have properties that will allow us to greatly simplify the problem
+- apply to mean field methods:
+    - just show the results (TODO: copy and reduce wiki in appendix)
+- key takeaway: natural parameters jazz
+
+1.4.4 Deriving updates
+- conjugacy is key feature of model
+    - if prior and posterior are in the same family, they are conjugate, and the prior is the ``conjugage prior'' for the likelihood
+    - all exponential family dists have conjugate priors
+    - this makes life very easy:
+    - TODO: appendix: insert math showing what the actual update is for the natural parameter jazz
+    - intuitive result: means in the posterior, basically just update the pseudocounts with the number of times that thing was seen in the data
+
+1.4.5 CAVI
+- TODO: find good explanation of the difference
+- global governs several, local for each data point
+- updates essentially the same
+    - give updates for each in general form (exponential)
+    - TODO: insert actual updates
+    - TODO: review explanation why they are slightly
+- iterating between local and global updates gives EM-style algorithm for VB
+    - E-step: compute a new objective function (ELBO) given the data
+    - M-step: optimize global variables to maximize the objective function
+    - TODO: give pseudocode for CAVI
+- point about how you can also simultaneously update the actual model parameters (as done in AG)
+- until model converges, iterate
+- see here how you can multiprocess it easily
+    - local variable updates can be distributed to as many cores as needed, and then collected again
+
+Methods
+2.1 The Generative Model
+2.1.1 Adaptor Grammars
+- High-level adaptor grammars stores all discovered syntactic structures and biases reusing frequently occurring ones. 
+- First: PCFG (from Johnson 2007)
+    - First: CFG:
+        - CFG is quadruple (N, E, R, S)
+        - nonter. ter, rules, start
+        - N \cap E = null
+        - start \in N
+        - R form A -> beta 
+            - A \in N and beta \in (N \cup E)* (i.e. any number of things in N\cup E)
+    - PCFG: (N, E, R, S, \theta)
+        - theta set of rule weights such that \forall A-> beta \in R sum theta_A->Beta = 1
+        - R_A subset of R w A on lhs
+    - PYP process:
+        - stick breaking 
+
+
+
+        - rich get richer process 
+        - frequently reused parses get stopped at more often
+- AG definition: (from cohen 2010 and zhai 2014)
+    - tuple: (G, M, a, b, \alpha) where G is CFG, (cohen 2010)
+    - let A_1...,A_k be adapted nonterminals in reverse topological sorted order 
+
+    Building Grammar
+    - for each nonterminal
+        - draw rule weights \theta_A from Dir(\alpha_A)
+    - for each adapted nonterminal A in A_1,...,A_k construct G_A:
+        - draw \pi_A ~ PYP(a_A, b_A)
+        - for i in {1,....} construct tree z_{A_i} 
+            - draw a rule A -> B_1 ... B_n from R_A
+            - set z_{A,i} to A
+                            / \
+                            B1 Bn
+            - while z_ai has non-terminals as leaves
+                - choose a B_i
+                - if non-adapted expand using theta
+                - if adapted expand using G_B (guaranteed to be defined because of topological ordering)
+        - for i in {1....}
+            - set G_A(z_{A,i}) = \pi_{A,i}
+
+    Generating data
+    - for i in {1...|x|} draw tree z_i:
+        - if S adapted 
+            draw z_i ~ G_S
+        - else
+            - draw S-> B1...Bn from R_S
+            - set z_i to    S
+                           / \
+                           B1 Bn
+            - while there are non-terminal leaves
+                - choose B
+                - if B adapted
+                    - expand using G_B
+                - else (B nonadpated):
+                    - expand using PCFG
+
+- latent variables:
+    - z_a,i, z_i, \nu, and \theta
+    - z_i the most interesting, but z_{A,i} (what gets stored) can also reveal a lot about underlying linguistic structure
+- inference problem: 
+    - posterior distribution on full derivational trees $z_i$ given the sentences 
+    - large number of latent variables
+    - also very large number of parses for each sentence (usually grammar ambiguous)
+
+
+
+- Say we're using Zhai AG implementation
+2.1.2 DPHMM (from lee 2012)
+- what it learn:
+    - phonetic boundaries of the utterance 
+    - clusters of acoustically similar segments
+    - PLUs
+- parts of the model: 
+    - data x of 39 dimensional MFCC vectors encoding speech data
+        - x_t^i is t^{th} frame of ith utterance
+    - boundaries b_t^i 
+        - binary r.v. whether there is a boundary between x_t^i and x_{t+1}^i
+    - segment p^i_{j,k} is feature vectors between 2 boundaries
+    - cluster label (c_{j,k}^i) means segment p^i_{j,k} generated by HMM w label c^i_{j,k}
+    - HMM \Theta_c each with 3 emission states (beginning middle end of sub-word unit)
+    emission probability modeled by GMM w 8 mixtures
+    - hidden state s^i_t associated w x^i_t
+    - mixture ID m_t^i is gaussian mixture that generates x_t^i
+
+
+
+- TODO: DPHMM from Lee and Glass 2013
+- say we're using Ondel DPHMM implementation
+2.1.3 Noisy Channel
+- TODO: finialize and explain the noisy channel model 
+- our own noisy channel implementation -- explain how it was implemented, where the code lives
+
+- give joint generative model
+- show joint elbo
+
+2.2 Updates
+- Show math giving variational updates for different components
+- TODO: do math for DPHMM updates and insert results
+- TODO: do math for noisy channel updates, insert results 
+- TODO: give math for updates in appendix (maybe for just one example)
+
+2.3 Running the model
+- TODO: explain what you ran it on, sort of how you did it
+
+Results
+
+Discussion
+
+Conclusion
+
+
+
+
+
+
