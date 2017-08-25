@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  24 AUG 2017 16:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  25 AUG 2017 17:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -569,22 +569,21 @@ File: pgfmodulematrix.code.tex 2013/09/17  (rcs-revision 1.8)
 (/usr/local/texlive/2017/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
 s/tikzlibrarytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2008/06/17 v3.0.1a (rcs-revision 1.2)
-))) (./thesis.aux (./ag.aux) (./appendix_a.aux)
-(./appendix_b.aux))
+))) (./thesis.aux (./appendix_a.aux))
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
 
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -680,49 +679,63 @@ e
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 ABD: EveryShipout initializing macros
-LaTeX Font Info:    Try loading font information for U+msa on input line 32.
+LaTeX Font Info:    Try loading font information for U+msa on input line 34.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 32.
+LaTeX Font Info:    Try loading font information for U+msb on input line 34.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+ [4] [5]
+Underfull \hbox (badness 10000) in paragraph at lines 127--128
 
-Overfull \hbox (12.0pt too wide) in paragraph at lines 88--101
-[][] 
  []
 
-[4]
+(./ag.tex [6])
+Overfull \hbox (20.23589pt too wide) in paragraph at lines 3--144
+[][] []
+ []
 
-Package natbib Warning: Citation `Johnson:2007' on page 5 undefined on input li
-ne 112.
 
-[5] [6]
-\openout2 = `ag.aux'.
+Underfull \hbox (badness 10000) in paragraph at lines 3--144
 
- (./ag.tex) [7
+ []
 
-]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 143.
-
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 148.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 143.
- [8
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 148.
+ [7]
+Underfull \hbox (badness 10000) in paragraph at lines 160--160
 
-]
+ []
+
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 163--164
+
+ []
+
+[9] [10]
+Overfull \hbox (10.79341pt too wide) in paragraph at lines 225--226
+[]$\OML/cmm/m/it/12 m[]$\OT1/cmr/m/n/12 : the GMM com-po-nent of the $\OML/cmm/
+m/it/12 j[]$ \OT1/cmr/m/n/12 frame for the $\OML/cmm/m/it/12 i[]$ \OT1/cmr/m/n/
+12 seg-ment; \OT1/cmr/m/it/12 HP\OT1/cmr/m/n/12 : $\OML/cmm/m/it/12 ^^V[]; \OT1
+/cmr/m/n/12 (\OML/cmm/m/it/12 ^^T[]^^U\OT1/cmr/m/n/12 )[]\OML/cmm/m/it/12 ; ^^Q
+[]$ 
+ []
+
+[11] [12]
 \openout2 = `appendix_a.aux'.
 
-
-(./appendix_a.tex
+ (./appendix_a.tex
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ô in font cmr12!
@@ -735,39 +748,31 @@ Missing character: There is no ù in font cmr12!
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ô in font cmr12!
- [9
+ [13
 
-] [10]) [11] [12]
-\openout2 = `appendix_b.aux'.
+] [14]) [15] [16] (./appendix_b.tex [17
 
- (./appendix_b.tex [13
-
-
-] [14]
-Overfull \hbox (30.79024pt too wide) in paragraph at lines 82--83
+]
+[18]
+Overfull \hbox (30.79024pt too wide) in paragraph at lines 83--84
 []\OT1/cmr/m/n/12 Notice that many of the ex-pec-ta-tions drop out. Sub-sti-tut
 -ing this for $[] []$
  []
 
-[15]) [16] (./thesis.bbl)
-
-Package natbib Warning: There were undefined citations.
-
-[17
-
-] (./thesis.aux (./ag.aux) (./appendix_a.aux) (./appendix_b.aux)) )
+[19] [20]) (./appendix_c.tex [21]) [22] (./thesis.bbl [23]) [24] (./thesis.aux
+(./appendix_a.aux)) )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 1061 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 14970 strings out of 492995
- 286030 string characters out of 6132704
- 354264 words of memory out of 5000000
- 18203 multiletter control sequences out of 15000+600000
+ 14988 strings out of 492995
+ 286400 string characters out of 6132704
+ 353836 words of memory out of 5000000
+ 18226 multiletter control sequences out of 15000+600000
  13371 words of font info for 51 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,27n,57p,1580b,11473s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,26n,54p,2333b,11417s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmbx12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmbx8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm
@@ -784,10 +789,10 @@ fb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb>
 sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr
 /local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/
 local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on thesis.pdf (17 pages, 221156 bytes).
+Output written on thesis.pdf (24 pages, 253197 bytes).
 PDF statistics:
- 126 PDF objects out of 1000 (max. 8388607)
- 90 compressed objects within 1 object stream
+ 149 PDF objects out of 1000 (max. 8388607)
+ 105 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 
