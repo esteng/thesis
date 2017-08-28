@@ -1,21 +1,22 @@
 
 
 \section{Deriving Variational Updates}
-
+\label{append_b}
 
 \subsection{Mean Field Approximation }
 
 Recall our mean-field assumption to treat each variational distribution as conditionally independent: $q(Z) = \prod\limits_{i} q_i(z_i)$; also recall that our bound on the log marginal likelihood was:
 
 
-\begin{align} L(q) \geq \sum\limits_{z_i \in Z} q(Z) \log\ p(X,Z|\Phi) + H(q) \end{align}
+\begin{align} 
+\nonumber \mathcal{L}(q) \geq \sum\limits_{z_i \in Z} q(Z) \log\ p(X,Z|\Phi) + H(q) \end{align}
 
 
 For the sake of concise notation, let $q_j = q_{\nu_j}(Z_j)$ and disregard the conditioner $\Phi$ for now. Replace $q(Z)$ with this approximating product:
 
 \begin{align} 
-\nonumber L(q) \geq \sum\limits_{z_i \in Z} \left( \prod\limits_{i} q_i(z_i) \right) \log\ p(X,Z|\Phi) + H(q) \\
-L(q) \geq \mathbb{E}_{ \prod\limits_{i} q_i(z_i) } \log\ p(X,Z|\Phi) [\log\ p(X,Z|\Phi)] + H(q)
+\nonumber \mathcal{L}(q) \geq \sum\limits_{z_i \in Z} \left( \prod\limits_{i} q_i(z_i) \right) \log\ p(X,Z|\Phi) + H(q) \\
+\mathcal{L}(q) \geq \mathbb{E}_{ \prod\limits_{i} q_i(z_i) } \log\ p(X,Z|\Phi) [\log\ p(X,Z|\Phi)] + H(q)
 \end{align}
 
 Using the chain rule and by expanding the entropy term, we can rewrite this expression as
@@ -83,12 +84,15 @@ Notice that many of the expectations drop out. Substituting this for $\frac{\del
 
 
 \begin{align}
+\label{expectation_of_g}
 \nonumber \nu_i = \left( \frac{\delta}{\delta \nu_i} \mathbb{E}_q [\log\ h(z_i)] + \mathbb{E}_q[g_i(Z_{-i}, X, \Phi)]^Ta''(\nu_i) -  \frac{\delta}{\delta \nu_i} \mathbb{E}_q[\log\ h(z_i))] \right) \left(a''(\nu_i)\right)^{-1} \\
 \nonumber =  \left( \mathbb{E}_q[g_i(Z_{-i}, X, \Phi)]^Ta''(\nu_i) \right) \left(a''(\nu_i)\right)^{-1} \\
 = \mathbb{E}_q[g_i(Z_{-i}, X, \Phi)]
 \end{align}
 
 So the optimal value (when the derivative is $0$) of $\nu_i$ is $\nu_i = \mathbb{E}_q[g_i(Z_{-i}, X, \Phi)]$. 
+
+\subsection{Conjugacy}
 
 Now we need to obtain a closed-form expression for $\mathbb{E}_q[g_i(Z_{-i}, X, \Phi)$. Firstly, let $\Phi$ becomposed of 2 parts $\phi_1$ and $\phi_2$, where $\phi_1$ is the number of observations contributed by the prior, and $\phi_2$ corresponds to the total effect of the observations on the sufficient statistic. Because of the factorization and exponential family assumptions we made earlier, we can say:
 
@@ -119,19 +123,37 @@ where $t(x_n, z_n)$ is the sufficient statistic, which in most cases is simply t
 Because all exponential family distributions have conjugate priors, this result implies that the posterior $P(z_i \mid X, Z_{-i}, \Phi)$ is the same type of distribution as the prior with parameters:
 
 \begin{align}
-P(z_i | X,Z_{-i},\Phi) = P_{\pi}\big(z_i | \phi_2 + \sum\limits_{z_n \in Z_{-i}} t(x_n, z_n), \phi_2 + N\big)
+P(z_i | X,Z_{-i},\Phi) = P_{\pi}\big(z_i | \phi_1 + \sum\limits_{z_n \in Z_{-i}} t(x_n, z_n), \phi_2 + N\big)
 \end{align}
 
-This means that the natural parameters of the posterior distribution on global hidden variables has the natural parameters $\phi_2 + \sum\limits_{z_n \in Z_{-i}} t(x_n, z_n)$ and $\phi_2 + N$, giving us a closed form for our expectation in equation TODO: add final equation number here: 
+This means that the natural parameters of the posterior distribution on global hidden variables has the natural parameters $\phi_2 + \sum\limits_{z_n \in Z_{-i}} t(x_n, z_n)$ and $\phi_2 + N$, giving us a closed form for our expectation in \eqref{expectation_of_g}: 
 
 \begin{align}
-\mathbb{E}_q[g_i(Z_{-i}, X, \Phi)] = \mathbb{E}_q \begin{bmatrix} \phi_2 + \sum\limits_{z_n \in Z_{-i}} t(x_n, z_n) \\ \phi_2 + N \end{bmatrix}
+\mathbb{E}_q[g_i(Z_{-i}, X, \Phi)] = \mathbb{E}_q \begin{bmatrix} \phi1 + \sum\limits_{z_n \in Z_{-i}} t(x_n, z_n) \\ \phi_2 + N \end{bmatrix}
 \end{align}
 
 \citep{hoffman:2013}
 
 
 
+\subsection{Alternative Form}
+We can derive an alternative form for an optimal setting of $q$ without the exponential family requirements by following the method described in \citet{bishop:2006}. Recall that 
 
+\begin{align}
+ \nonumber \mathcal{L}(q) = \sum\limits_{z_i \in Z} \Big( \left( \prod\limits_{i} q_i(z_i) \right) \log\ p(X,Z|\Phi) + \sum\limits_{i}q_i(z_i) \Big)
+\end{align}
 
+This can be rewritten as 
 
+\begin{align*}
+\label{to_max}
+\nonumber \mathcal{L}(q) &= \sum\limits_{\forall z_j} q_j(z_j) \Big( \sum\limits_{z_i \neq z_j} \log\ p(X,Z) \prod\limits_{i\neq j}q_i(z_i) \Big) - \sum\limits_{\forall z_j} q_j(z_j) \log\ q_j + const\\
+\numberthis &= \sum\limits_{\forall z_j} q_j(z_j) \log\ \tilde p(X, z_j) - \sum\limits_{\forall z_j} q_j(z_j) \log\ q_j(z_j) + const 
+\end{align*}
+
+where $\log \tilde p(X, z_j) = \mathbb{E}_{i\neq j}[\log\ p(X,Z)] + const$ and $\mathbb{E}_{i\neq j}$ is the expectation taken with respect to all distributions $q$ except $q_i$. Maximizing \eqref{to_max} is equivalent to minimizing the KL divergence, with the minimum occurring when $q_j(z_j) = \tilde p(X,z_j)$. Thus the optimal distribution $q^*_j(z_j)$ can be written:
+
+\begin{align}
+\log q^*_j(z_j) = \mathbb{E}_{i \neq j}[\log\ p(X,Z)] + const
+\end{align}
+\citep{bishop:2006}

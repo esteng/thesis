@@ -9,18 +9,18 @@
 \usepackage{bigints}
 \usepackage[margin=1in]{geometry}
 \usepackage{mathtools}
-\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[ruled, vlined]{algorithm2e}
 \usepackage{float}
 \usepackage{tikz}
+\usepackage{hyperref}
 
-\newcommand{\simpletree}[3]{
-\begin{tikzpicture}[baseline={(current bounding box.north)}, level 1/.style={sibling distance=10mm},level 2/.style={sibling distance=10mm}]
+\newcommand{\simpletree}[4]{
+\begin{tikzpicture}[baseline={(current bounding box.#4)}, level 1/.style={sibling distance=10mm},level 2/.style={sibling distance=10mm}]
     \node {#1}
     child { node {#2}}
     child {node {$\ldots$} edge from parent[draw=none]}
     child { node {#3}};
 \end{tikzpicture}}
-
 
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 
@@ -72,7 +72,15 @@ One of the main reasons why we cannot compute the posterior directly is the pres
 \begin{align}
 \mathcal{L}_i = \mathbb{E}_q[\log\ p(z_i| Z_{-i}, X, \Phi)] - \mathbb{E}_q[\log\ q_{\nu_i}(z_i)]
 \end{align} 
-where $Z_{-i}$ indicates all latent variables in $Z$ which are not $z_i$. 
+where $Z_{-i}$ indicates all latent variables in $Z$ which are not $z_i$. Alternatively, without making exponential family assumptions, we can derive that the optimal solution $q^*_{\nu_i}(z_i)$ for $q_{\nu_i}(z_i)$ can be written:
+\begin{align}
+\log q^*_j(z_j) = \mathbb{E}_{i \neq j}[\log\ p(X,Z)] + const
+\end{align}
+or equivalently 
+\begin{align}
+q^*_j(z_j) \propto \exp\bigg\{ \mathbb{E}_{i \neq j}[\log\ p(X,Z)] \bigg\}
+\end{align}
+
 
 \subsubsection{Updates}
 Recall that our goal is to adjust each $\nu_i$ in order to maximize our lower bound $\mathcal{L}_i$ for each latent variable. Finding the value for $\nu_i$ that locally maximizes this function can be done by setting the first derivative with respect to $\nu_i$ equal to 0 and solving for $\nu_i$. Taking the derivative of the objective function can be costly, especially since it must be done every time we want to update our parameters and for every parameter in the factorized representation of the variational distribution. Using exponential family random variables will allow us to leverage some convenient mathematical facts and avoid this computation. When each $q_{\nu_i}$ and each distribution in the generative model are in the exponential family, we obtain the following closed-form update for each $\nu_i$: 
@@ -84,9 +92,7 @@ where $g_i(Z_{-i}, X, \Phi)$ is a function which gives the natural parameters of
 \subsubsection{Coordinate Ascent}
 We now have a way of optimizing each variational distribution by setting the parameters to the expected value of the natural parameters in the posterior, conditioned on the other latent variables and the data. If our objective function could be formulated as a strictly convex function, then one update of the variational parameters would be sufficient to find a solution, since a local optimum in a convex function is a global one. However, given the complex nature of most Bayesian models, this will rarely be the case. Instead, we use Coordinate Ascent Variational Inference (CAVI) in order to iteratively find local maxima, with the ultimate goal of converging on the global maximum. It is worth noting that the CAVI algorithm is a generalization of the well-known Expectation-Maximization algorithm \citep{dempster:1977} , but whereas the latter gives a point estimate of the posterior, the former returns an approximation of the full distribution. In the algorithm we will alternate between computing our objective function (analogous to the expectation step) and updating our variational parameters (analogous to the maximization step) \citep{neal:1998}.
 
-\begin{figure}[H]
-\begin{tabular}{|c|}
-\hline
+
 \begin{algorithm}[H]
 initialize each $\nu_i$ \\
 \While{not ELBO converged}{
@@ -95,11 +101,9 @@ initialize each $\nu_i$ \\
     }
     re-compute ELBO $\mathcal{L}(q) =\mathbb{E}_q [\log\ p(Z,X)] + H(q) $
 }
-\end{algorithm}\\
-\hline
-\end{tabular}
 \caption{The CAVI algorithm}
-\end{figure}
+
+\end{algorithm}
 
 \noindent The initialization step for each $\nu_i$ can be random, but this is not required. Often, we let $q_{\nu_i}(z_i)$ be a distribution of the same type as it is in the generative model, and initialize it with uniform or random parameters. However, we can choose the initial parameters more deliberately and encode some bias in the variational distribution, with the caveat that different initializations can lead to convergence on different local optima \citep{blei:2017}
 
@@ -109,18 +113,17 @@ initialize each $\nu_i$ \\
 The model can be broken up into roughly three parts: the adaptor grammar, the noisy channel, and the Dirichlet-process hidden Markov model. From the perspective of the generative model, the adaptor grammar builds a syntactic tree whose yield is a set of top-level phone-like units (PLUs). The tree groups these into morphemes and words. The noisy channel, using a sequence of edit operations (insertion, deletion, and substitution) maps these top-level PLUs to bottom-level PLUs, modeling some of the phonological processes which occur during speech production. Finally, the Dirichlet-process hidden Markov model takes these bottom-level PLUs and finds an acoustic signal that could have generated them. 
 
 \subsection{Adaptor grammars}
-First developed by \citet{Johnson:2007}, adaptor grammars take as input some context-free grammar and some strings which can be parsed by that grammar. Using a non-parametric distribution, they store parse trees while biasing the reuse of frequently occurring trees, which reveals patterns in the linguistic structure of the data. By increasing the likelihood of reusing a tree according to its frequency, adaptor grammars instantiate a ``rich get richer'' dynamic where common trees become more likely than uncommon ones. In ULD, we use adaptor grammars to group discovered phones into morphemes and words. Before formally defining adaptor grammars, we need to define context free grammars, probabilistic context free grammars, and the Pitman-Yor Process.
+First developed by \citet{johnson:2007}, adaptor grammars take as input some context-free grammar and some strings which can be parsed by that grammar. Using a non-parametric distribution, they store parse trees while biasing the reuse of frequently occurring trees, which reveals patterns in the linguistic structure of the data. By increasing the likelihood of reusing a tree according to its frequency, adaptor grammars instantiate a ``rich get richer'' dynamic where common trees become more likely than uncommon ones. In ULD, we use adaptor grammars to group discovered phones into morphemes and words. Before formally defining adaptor grammars, we need to define context free grammars, probabilistic context free grammars, and the Pitman-Yor Process.
 
 \subsubsection{Context-free Grammars}
-A context-free grammar (CFG) is a tuple $(N, E, R, S)$ where $N$ is a set of nonterminals symbols, $E$ is a set of terminal symbols disjoint from $N$, $R$ is a set of rules of the form $A \rightarrow \beta$ where $A \in N$ and $\beta \in (N \cup E)*$ (i.e. any concatenation of symbols in $N$ and $E$). For this implementation, we will constrain our CFGs to be in Chomsky normal form, where all the rules are either of form $A \rightarrow a$ where $a \in E$ or $A \rightarrow BC$ where $B\in N\cup E$ and $C\in N\cup E$. Note that any CFG without epsilon productions (rules that go to the empty string) can be rewritten in Chomsky normal form. \citep{hill:1979}  
+A context-free grammar (CFG) is a tuple $(N, E, R, S)$ where $N$ is a set of nonterminals symbols, $E$ is a set of terminal symbols disjoint from $N$, $R$ is a set of rules of the form $A \rightarrow \beta$ where $A \in N$ and $\beta \in (N \cup E)*$ (i.e. any concatenation of symbols in $N$ and $E$). For this implementation, we will constrain our CFGs to be in Chomsky normal form, where all the rules are either of form $A \rightarrow a$ where $a \in E$ or $A \rightarrow BC$ where $B\in N\cup E$ and $C\in N\cup E$. Note that any CFG without epsilon productions (rules that go to the empty string) can be rewritten in Chomsky normal form. \citep{hopcroft:2006}  
 
 \subsubsection{Probabilistic Context-free Grammars}
 Similarly to a CFG a probabilistic context-free grammar (PCFG) is a tuple $(N, E, R, S, \theta)$ where $N,E,R,S$ are the same as in a CFG, and $\theta$ is a set of probability vectors such that $\sum\limits_{A\rightarrow \beta \in R_A} \theta_{A\rightarrow \beta} = 1$, where $R_A$ is the set of rules which have nonterminal $A$ on the left-hand side. 
 
 \subsubsection{Pitman-Yor Process}
-The Pitman-Yor process \citep{pitman:1997} can be thought of as a distribution on infinite-sided dice, or as generating a partition of integers. Perhaps more intuitively, a Pitman-Yor process defines a distribution over distributions\textemdash each draw from a Pitman-Yor process is itself an infinite distribution. There are multiple equivalent ways of defining a Pitman-Yor process\textemdash we will be using the stick-breaking construction, as it gives us an iterative definition. Given a scale parameter $a$, a discount factor $b$ and a base distribution $G_0$, a Pitman-Yor process which partions $[0,1]$ into countably infinite segments is defined by the following algorithm:
-\begin{figure}[H]
-\scalebox{.75}{
+The Pitman-Yor process \citep{pitman:1997} can be thought of as a distribution on infinite-sided dice, or as generating a partition of integers. Perhaps more intuitively, a Pitman-Yor process defines a distribution over distributions\textemdash each draw from a Pitman-Yor process is itself an infinite distribution. There are multiple equivalent ways of defining a Pitman-Yor process\textemdash we will be using the stick-breaking construction, as it gives us an iterative definition. Given a scale parameter $a$, a discount factor $b$ and a base distribution $G_0$, a Pitman-Yor process which partions $[0,1]$ into countably infinite segments is defined by the following algorithm:\\
+
 \begin{algorithm}[H]
 \For{$i\in \{1,\ldots\}$}{
     draw $\nu_i \sim Beta(1-b, a + ib)$ \\
@@ -128,15 +131,15 @@ The Pitman-Yor process \citep{pitman:1997} can be thought of as a distribution o
     define $\pi_i \overset{\Delta}{=} \nu_i \prod\limits_{j=1}^{i-1} (1-v_j)$\\
 }
 define $G(z) \overset{\Delta}{=} \sum\limits_{i=1}^\infty \pi_i \delta(z_i, z)$ \emph{where $\delta(z_i,z) = 1$ if $z_i = z$, $0$ otherwise}\\
+\caption{The Pitman-Yor process}
 \end{algorithm}
-}
-\end{figure}
-Recall that a draw from a Beta distribution is a biased coin. Intuitively, each $\nu_i$ is a coin that gives the probability of stopping at that stick, and $1-\nu_i$ is the probability of continuing to the next stick. Then $pi_i$, the probability of being at stick $i$, is equivalent to the product of the probability of having passed sticks $1,...,i-1$ and the probability of stopping at stick $i$. 
+\vspace{1em}
+\noindent Recall that a draw from a Beta distribution is a biased coin. Intuitively, each $\nu_i$ is a coin that gives the probability of stopping at that stick, and $1-\nu_i$ is the probability of continuing to the next stick. $\pi_i$, the probability of being at stick $i$, is equivalent to the product of the probability of having passed sticks $1,...,i-1$ and the probability of stopping at stick $i$. 
 
 \subsubsection{Adaptor grammar definition}
 With these components, we can formally define an adaptor grammar as a tuple $(G, M, a, b, \alpha)$ where $G$ is a CFG, $M$ is a set of \textit{adapted nonterminals}, $a$ and $b$ are Pitman-Yor process parameters, and $\alpha$ is a set of Dirichlet distribution parameters indexed by each nonterminal in $N$. Let $A_1,\ldots,A_k$ be a reverse topological sorting of the adapted nonterminals in $M$, such that for all $A_j \in M$ the children of $A_j$ come before $A_j$ in the ordering. The following two algorithms define an adaptor grammar.
+\input{ag}
 
-\include{ag}
 
 This definition of adaptor grammars gives us the following latent variables: 
 \begin{itemize}
@@ -145,27 +148,196 @@ This definition of adaptor grammars gives us the following latent variables:
 \item $\nu$: the set of stick-weight proportions for the Pitman-Yor process
 \item $\theta$: the set of PCFG rule probabilities 
 \end{itemize}
-Our inference problem can be formalized as finding the posterior distribution on full derivational trees $z_i$\textemdash these depend on all the other latent variables, and reveal the inferred underlying linguistic structure. However, this inference is over an extremely large set of latent variables. In fact, in the current formalization, we cannot do inference over this set of latent variables, since some are countably infinite. To make this problem finite, we use a truncated stick-breaking representation, where after a sufficiently large $i$ we let $\nu_i = 1$, so that the probability of continuing past that stick is 0. Beyond the large number of latent variables, we need to take into account the large number of potential parses for each sentence given the grammar. Indeed, averaging rule probabilities over all of these parses will be the most costly portion of the algorithm (see section TODO: INSERT I/O section). 
+Our inference problem can be formalized as finding the posterior distribution on full derivational trees $z_i$\textemdash these depend on all the other latent variables, and reveal the inferred underlying linguistic structure. However, this inference is over an extremely large set of latent variables. In fact, in the current formalization, we cannot do inference over this set of latent variables, since some are countably infinite. To make this problem finite, we use a truncated stick-breaking representation, where after a sufficiently large $i$ we let $\nu_i = 1$, so that the probability of continuing past that stick is 0. Beyond the large number of latent variables, we need to take into account the large number of potential parses for each sentence given the grammar. Indeed, averaging rule probabilities over all of these parses will be the most costly portion of the algorithm. 
 
-\subsection{Dirichlet-process hidden Markov model}
+\subsection{Dirichlet process hidden Markov model}
+The goal of the DPHMM is to jointly learn the phonetic boundaries of the speech input, clusters of acoustically similar segments, and PLU identities. By using a Dirichlet process, it does not bound the number of possible PLUs, but (as in the adaptor grammar model) the reuse of existing PLUs is preferred. In the original model, defined by \citet{lee:2012}, a sampling approach was used. Extending this work, \citet{ondel:2016} reimplemented the model using variational Bayesian techniques. To describe the model, we first need to provide background on hidden Markov models and Gaussian mixture models.
+\subsubsection{Hidden Markov Models}
+A hidden Markov model (HMM) consists of a finite number of states combined with probability distribution over transitioning between states. This distribution is dependent on the state being transitioned from. Observations are generated by such transitions, and the probability of emitting a certain observation is defined by a distribution which depends on the current state (the state transitioned to) \citep{rabiner:1986}. In the case of the DPHMM model, each PLU is modeled by its own three-state HMM, corresponding to the start, middle, and end of a phone. Each emission distribution is modeled by a Gaussian mixture model. 
+\subsubsection{Gaussian Mixture Models}
+A multimodal continuous distribution can be modeled by a linear combination (a mixture) of Gaussian distributions. Each Gaussian is known as a \textit{component} with a mean $\mu_k$ and a covariance $\Sigma_k$. In order to combine several Gaussians, we need \textit{mixing coefficients} $\pi_k$ such that $\sum\limits_{k=1}^K \pi_k = 1$. Using these coefficients, we choose a Gaussian distribution and then sample a datapoint from its probability density function. The probability of datapoint $x$ in a GMM is\\ \begin{align}\nonumber p(x) = \sum\limits_{k=1}^K \pi_k \mathcal{N}(x|\mu_k, \Sigma_k) \end{align} \citep{bishop:2006}\\
+From this, it is clear that the greater the mixing coefficient, the more often that component will be chosen. 
+\subsubsection{The DPHMM generative model}
+The following algorithm defines the DPHMM generative model: \\
 
 
+\begin{algorithm}[H]
+\KwResult{Defining the mixture models}
+choose the GMM mixture weights $\pi \sim Dir(\eta_0^{gmm})$\\
+choose mean $\mu$, and covariance matrix $\Sigma$ with diagonal $\lambda$ by drawing from the Normal-Gamma distribution parametrized by normal distribution hyper-parameters $\mu_0$ and $(\kappa_0\lambda)^{-1}$, and Gamma distribution hyper-parameters $\alpha_0, \beta_0$. \\
+
+\KwResult{Defining the HMM transition matrix}
+choose the rows of the transition matrix $r_i \sim Dir(\eta_0^{hmm,i})$\\
+
+\KwResult{Sampling $M$ possible PLUs}
+\For{$i \in \{1,\ldots, M\}$}{
+    sample $\nu_i \sim Beta(1, \gamma)$\\
+    sample cluster label $\theta_i \sim G_0$, the Dirichlet process base distribution\\
+}
+\KwResult{Sampling $N$ datapoints}
+\For{$i \in \{1,\ldots,N\}$}{
+    choose an cluster label $\theta_i$ with probability $\pi_i(\nu) =  \nu_i \prod\limits_{j=1}^{i-1} (1-v_j)$ \\
+    \emph{cluster labels correspond to HMMs}\\
+    sample a path $S = s_1, \ldots, s_n$ from the transition probability distribution\\
+    \For{$s_j \in S$}{
+        choose a Gaussian component from mixture model\\
+        sample datapoint from Gaussian density function\\
+    }
+}
+\caption{Defining the DPHMM}
+\end{algorithm}
 
 
+This model has three sets of latent variables: 
+\begin{itemize}
+\item $c_i$: the cluster assignment of the $i^{th}$ segment in the dataset
+\item $s_{ij}$: the HMM state of the $j^{th}$ frame for the $i^{th}$ segment
+\item $m_{ij}$: the GMM component of the $j^{th}$ frame for the $i^{th}$ segment
+\end{itemize}
 
 
+\subsection{Noisy Channel}
+The final component to the joint model, the noisy channel, allows the DPHMM and adaptor grammar to interface by rewriting each other's outputs. For example, if there is a mistake in the transcription or in the DPHMM cluster assignment, the adaptor grammar could fix this by substituting in a more probable PLU. The full set of operations the noisy channel allows is: substitution, insertion, and deletion. These are the same exact operations as in the well-known \textit{Levenshtein distance} algorithm, defined by \citet{levenshtein:1966}. This dynamic programming algorithm is typically used to find the minimum edit distance between two strings\textemdash that is, the minimum number of insertions, deletions, and substitutions required to rewrite one string as the other. In order to define a noisy channel, we leave the second string unspecified, and use the Levenshtein framework to enumerate all possible strings that the first string could be edited into. In order to remain theoretically faithful, we limit the number of consecutive insertions and deletions, and strongly bias making no edit at all. This makes intuitive sense, as all communication would break down were a speaker to substitute every phoneme he wanted to produce, insert an arbitrary number of extra ones, or delete all of them. In order to define this model, we need the following prior probabilities: 
+\begin{itemize}
+    \item operation probabilities $o$: this is a probability vector specifying the probability of doing an insertion, deletion, or substitution at all. It is drawn from a Dirichlet distribution.
+    \item probability of inserting each phone $I$: given an alphabet of length $k$, we draw a probability vector from a Dirichlet distribution which specifies the probability of inserting that phone into the produced string (assuming that insertion has already been picked)
+    \item probability of substitution $\zeta$: since each phone can be substituted for each other phone, this is a $k\times k$ matrix where each row sums to 1. Thus, we draw each row from a $k$-dimensional Dirichlet distribution. 
+\end{itemize}
+Similarly, these three random variables comprise our set of latent variables in the noisy channel model. 
+
+\section{Updates}
+Having defined our model, we need to construct variational distributions which approximate the posterior for each latent variable. The full set of latent variables, listed with the hyperparameters of their prior distributions and the name of the variational parameter indexing its variational distribution $q$ (if applicable) is given below. Note that the variational implementation of the DPHMM follows a slightly different paradigm, so we use the updates given in \citet{ondel:2016}. 
+\begin{itemize}
+    \item Adaptor grammar latent variables
+    \begin{itemize}
+        \item $z_i$: the full derivational trees that yielded the data; \textit{Variational parameter (VP)}: $\phi $
+        \item $z_{A,i}$: the stored sub-trees headed by adapted non-terminals; \textit{VP}: $\phi_A$
+        \item $\nu$: the set of stick-weight proportions for the Pitman-Yor process; 
+        \textit{Hyperparamters (HP)}:$a,b$; \textit{VP}: $\gamma^1, \gamma^2$
+        \item $\theta$: the set of PCFG rule probabilities; \textit{HP}: $\alpha$; \textit{VP}: $\tau$ 
+    \end{itemize}
+    \item DPHMM latent variables
+    \begin{itemize}
+        \item $c_i$: the cluster assignment of the $i^{th}$ segment in the dataset; \textit{HP}: $\gamma$
+        \item $s_{ij}$: the HMM state of the $j^{th}$ frame for the $i^{th}$ segment; \textit{HP}: $\eta_0^{hmm}, G_0$ 
+        \item $m_{ij}$: the GMM component of the $j^{th}$ frame for the $i^{th}$ segment; \textit{HP}: $\mu_0, (\kappa_0\lambda)^{-1}, \eta_0^{gmm}$
+    \end{itemize}
+    \item Noisy channel latent variables
+    \begin{itemize}
+        \item $o$: the operation probabilities; \textit{HP} $\varepsilon^{ops}$; \textit{VP}: $\xi^{ops}$
+        \item $I$: the insertion probabilities; \textit{HP} $\varsigma^{ins}$; \textit{VP}: $\varphi^{ins}$
+        \item $\zeta$: the substitution probabilities; \textit{HP}: $\rho $;\textit{VP}: $\sigma$
+    \end{itemize}
+\end{itemize}
+
+\subsection{Adaptor grammar updates}
+The updates for the adaptor grammar are given as in \citet{cohen:2010}: 
+\begin{align*}
+\gamma^1_{A,i} &= 1-b_A + \sum\limits_{B\in M} \sum\limits_{k=1}^{N_B} \tilde f \Big(A \overset{*}{\rightarrow} s_{A,k}, s_{B,k}\Big)\\
+\gamma^2_{A,i} &= a_A + ib_A + \sum\limits_{j=1}^{i-1}\sum\limits_{B\in M}\sum\limits_{k=1}^{N_B} \tilde f\Big(A \overset{*}{\rightarrow} s_{A,j}, s_{B,k}\Big)\\
+\tau_{A, A\rightarrow \beta} &= \sum\limits_{B\in M}\sum\limits_{k=1}^{N_B} \tilde f\big(A \rightarrow \beta, s_{B,k}\big)\\
+\phi_{A,A \overset{*}{\rightarrow} s_{A,k}} &= \Phi(\gamma^1_{A,i}) - \Phi(\gamma^1_{A,i}  + \gamma^2_{A,i}) + \sum\limits_{j=1}^{i-1}\big(\Phi(\gamma^1_{A,i}) - \Phi(\gamma^1_{A,i}  + \gamma^2_{A,i}) \big) \\
+\phi_{A, A\rightarrow \beta} &= \Phi(\tau_{A,A\rightarrow \beta}) - \Phi(\sum\limits_{\beta} \tau_{A,A\rightarrow \beta})\\
+\end{align*}
+
+where $\tilde f \Big(r, s_{B,k}\Big)$ is the expected count of rule r in the derivation trees of string $s_{B,k}$ which is headed by nonterminal $B$ and spans $k$ units, and $A \overset{*}{\rightarrow} s_{A,k}$ indicates that non-terminal $A$ expands to the string headed by $A$ and spanning $k$ in its grammaton form. In \citet{cohen:2010} the value $\tilde f \Big(r, s_{B,k}\Big)$ is computing using the inside-outside algorithm and a preprocessing step to determine what $s_{B,k}$ is. However, note that in the implementation proposed in \citet{zhai:2014}, this preprocessing step is avoided by using sampling an approximating PCFG. In fact, the \citet{zhai:2014} model uses sampling to approximate the tree fragments $z_{A,i}$ and the full tree derivations $z_i$. Counter-intuitively, this speeds up the model, despite the sampling approach being slower in the general case. The increase in speed comes from the fact that the expectation and maximization steps of the CAVI algorithm can be equivalently defined not in terms of the ELBO and the variational parameters, but rather in terms of local and global latent variables. Local variables, such as the stick-weight proportions and rule weights, must be defined for each data point. Global variables, like the set of derivation trees $z_i$, take all of these variables into account. The expectation step involves optimizing the global variables, while the maximization step optimizes the local variables. This second optimization can be easily distributed across multiple cores. However, these optimized values need to be collected again in order to recalculate the global variables in the expectation step. Therefore, that portion of the algorithm is not easily parallelizable. Furthermore, in the original variational model, the run-time was dominated by the inside-outside algorithm for calculating expected values of rule counts, which has a time-complexity of $O(\mid N \mid^2 \mid x_i \mid^3 + \mid N \mid^3\mid x_i\mid^2)$ where $\mid x_i \mid$ is the length of the $i^{th}$ input sequence \citep{cohen:2010}. By using sampling, \citet{zhai:2014} avoid some of the cost involved in this computation. We incorporate this faster implementation into the ULD framework. For an example derivation of a variational update see Appendix \ref{append_c}. 
+
+\subsection{Noisy channel updates}
+Let $S$ be the set of all input strings to the noisy channel, let $PLU(i)$ indicate the PLU with index $i$, and let $O(i)$ indicate the operation indexed by $i$. Let $\tilde g(op[p], s_n)$ be the expected number of times an operation $op$ (which can be insertion or substitution) is applied to PLU parameter(s) $p$ in the string $s_n$. Note the overloaded call to $op[p]$ in the case of substitution, where it takes two parameters. This value is computed by summing over all possible edit sequences in the Levenshtein dynamic table. With this value, we can derive the updates for the noisy channel's variational distributions, using \eqref{expectation_of_g}. They are:
+\begin{align*}
+\nonumber \xi^{ops}_i &= \varepsilon^{ops}_i + \sum\limits_{s_n \in S}\sum\limits_{l = 1}^k \tilde g\Big(\big( O(i)[PLU(l)]\big), s_n\Big) \\
+\nonumber \phi^{ins}_i &= \varsigma^{ins}_i + \sum\limits_{s_n \in S} \tilde g\Big(ins\big[PLU(i)\big], s_n\Big)\\
+\nonumber \sigma_{i,j} &= \rho_{i,j} + \sum\limits_{s_n \in S} \tilde g\Big(sub\big[PLU(i), PLU(j)\big], s_n\Big)
+\end{align*}
+
+\section{Summary of previous results}
+\citet{lee:2015} ran several variants of ULD model on a set of lecture recordings from the MIT lecture corpus. These were: a full model where the number of distinct PLU types was inferred from the data, a truncated model where the PLU inventory size was given an upper limit of 50, a lesioned version where the acoustic model (the DPHMM component) was removed, meaning that the joint model could no longer relabel or resegment PLUs, and finally a version were the noisy channel and acoustic model were removed, splitting the joint model into two separate ones. 
+\subsection{Phone segmentation results}
+The phone segmentation produced by the joint model was evaluated against forced alignments of each lecture, with a $20ms$ tolerance margin (i.e. anything within $20ms$ of the force-aligned gold standard would be considered a correct alignment). Note that forced alignment\textemdash aligning a transcription of an audio recording with the actual audio by determining word and phone boundaries using machine learning\textemdash does not produce perfect alignment itself, so the gold standard against which \citet{lee:2015} evaluated their results most likely contained errors itself. Nevertheless, the F1 values reported by \citet{lee:2015} for phone segmentation, which can be seen in \hyperref[table1]{table \ref*{table1}}, show similar values for both the inferred PLU inventory system (FullDP) and the limited PLU inventory system (Full50), as well as the DPHMM system used to initialize the phone boundaries in the FullDP system, and the hierarchichal hidden Markov model (HHMM) used to initialize the Full50 system. 
+\begin{table}
+\begin{tabular}{|l|c|c||c|c|}
+\hline
+Lecture topic&Full50&HHMM&FullDP&DPHMM\\
+\hline \hline
+Economics&74.4&74.6&74.6&75.0\\
+\hline
+Signal processing&76.2&76.0&76.0&76.3\\
+\hline
+Clustering&76.6&76.6&77.0&76.9\\
+\hline
+Speaker adaptation&76.5&76.9&76.7&76.9\\
+\hline
+Physics&75.9&74.9&75.7&75.8\\
+\hline
+Linear algebra&75.5&73.8&75.5&75.7\\
+\hline
+
+\end{tabular}
+\caption{F1 scores for phone segmentation for each system and their respective initialization systems}
+\label{table1}
+\end{table}
+
+\subsection{Word segmentation}
+Because of the lack of a gold standard transcription of the audio used in the experiments, defining and measuring word segmentation is difficult. Nevertheless, \hyperref[table2]{table \ref*{table2}} has the F1 scores for the word segmentation task for both the truncated and the full PLU inventory systems. These results show that the noisy channel was important for word segmentation\textemdash intuitively, this makes sense, as words of the same type but with different surface realizations cannot be labeled as the same if the noisy channel is not allowed to make edits to accommodate the variation. The $1.6\%$ average improvement between the full system and the -AM lesioned version suggests that the joint learning nature of the model has a small positive effect on word segmentation.
+
+ \citet{lee:2015} also evaluated the number of top 20 term frequency–inverse document frequency words (a commonly used measure of word importance in a set of documents) that the various systems identified. These values are reported in comparison with the number of terms identified by a baseline system \citep{park:2008} and a state-of-the-art system \citep{zhang:2013}, the latter of which used a much richer representation for audio data than the Mel-Frequency Cepstrum Coefficients (MFCCs) used in ULD. As can be seen in  \hyperref[table3]{table \ref*{table3}}, both ULD systems frequently outperformed both the baseline and the state-of-the-art system, despite using a sparser data format to represent the audio than \citet{zhang:2013}. 
 
 
+\begin{table}
+\begin{tabular}{|l||c|c|c||c|c|c|}
+\hline
+Lecture topic&Full50&-AM&-NC&FullDP&-AM&-NC \\
+\hline \hline
+Economics&15.4&15.4&14.5&16.1&14.9&13.8\\
+\hline
+Signal processing&17.5&16.4&12.1&18.3&17.0&14.5\\
+\hline
+Clustering&16.7&18.1&15.9&18.4&16.9&15.2\\
+\hline
+Speaker adaptation&17.3&17.4&15.4&18.7&17.6&16.2\\
+\hline
+Physics&17.7&17.9&15.6&20.0&18.0&15.2\\
+\hline
+Linear algebra&17.9&17.5&15.4&20.0&17.0&15.6\\
+\hline
 
+\end{tabular}
+\caption{F1 scores for word segmentation by each system and its lesioned versions}
+\label{table2}
+\end{table}
 
+\begin{table}
+\begin{tabular}{|l||c|c|c||c|c|c||c|c|}
+\hline
+Lecture topic&Full50&-AM&-NC&FullDP&-AM&-NC&Park and Glass 2008&Zhang 2013\\
+\hline \hline
+Economics&12&4&2&12&9&6&11&14\\
+\hline
+Signal processing&16&16&5&20&19&14&15&19\\
+\hline
+Clustering&18&17&9&17&18&13&16&17\\
+\hline
+Speaker adaptation&14&14&8&19&17&13&13&19\\
+\hline
+Physics&20&14&12&20&18&16&17&18\\
+\hline
+Linear algebra&18&16&11&19&17&7&17&16\\
+\hline
+\end{tabular}
+\caption{Number of top 20 term frequency–inverse document frequency words discovered by each system}
+\label{table3}
+\end{table}
 
+\subsection{Qualitative results}
+In addition to these quantitative values, \citet{lee:2015} report several more qualitative results. For example, the ULD system discovered words such as \textit{globalization} and \textit{collaboration} which occurred frequently in the lectures; for both of these words, the system also discovered the productive \textit{-ation} suffix. Because the purpose of adaptor grammars is to compactly store parse trees, certain frequently occurring morphemes like \textit{-able} and \textit{-ation} are stored. Simutaneously, certain sequences of words, like \textit{the arab muslim word}, are stored as lexical items if they are common in the data. This calls into question our notion of words as a whole. There are sequences of words that almost always occur in that order, especially in a given context. To a language learner, these sequences of words 
 
 
 \appendix
 
 \include{appendix_a}
-\include{appendix_b}
-
+\input{appendix_b}
+\input{appendix_c}
+\newpage 
 \bibliographystyle{apalike}
 
 \bibliography{thesis}
