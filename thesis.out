@@ -23,15 +23,21 @@
 \BOOKMARK [1][-]{section.4}{Summary of previous results}{}% 23
 \BOOKMARK [2][-]{subsection.4.1}{Phone segmentation results}{section.4}% 24
 \BOOKMARK [2][-]{subsection.4.2}{Word segmentation}{section.4}% 25
-\BOOKMARK [1][-]{appendix.A}{Deriving the ELBO}{}% 26
-\BOOKMARK [2][-]{subsection.A.1}{The problem}{appendix.A}% 27
-\BOOKMARK [2][-]{subsection.A.2}{Important formulae}{appendix.A}% 28
-\BOOKMARK [3][-]{subsubsection.A.2.1}{Jensen's inequality}{subsection.A.2}% 29
-\BOOKMARK [3][-]{subsubsection.A.2.2}{Expected value}{subsection.A.2}% 30
-\BOOKMARK [3][-]{subsubsection.A.2.3}{Logarithms}{subsection.A.2}% 31
-\BOOKMARK [2][-]{subsection.A.3}{Derivation of variational bound}{appendix.A}% 32
-\BOOKMARK [1][-]{appendix.B}{Deriving Variational Updates}{}% 33
-\BOOKMARK [2][-]{subsection.B.1}{Mean Field Approximation }{appendix.B}% 34
-\BOOKMARK [2][-]{subsection.B.2}{Conjugacy}{appendix.B}% 35
-\BOOKMARK [2][-]{subsection.B.3}{Alternative Form}{appendix.B}% 36
-\BOOKMARK [1][-]{appendix.C}{Derivation of Updates}{}% 37
+\BOOKMARK [2][-]{subsection.4.3}{Qualitative results}{section.4}% 26
+\BOOKMARK [1][-]{section.5}{Variational improvements}{}% 27
+\BOOKMARK [2][-]{subsection.5.1}{DPHMM improvement}{section.5}% 28
+\BOOKMARK [2][-]{subsection.5.2}{Adaptor grammar improvement}{section.5}% 29
+\BOOKMARK [1][-]{section.6}{Future work}{}% 30
+\BOOKMARK [1][-]{section.7}{Conclusion}{}% 31
+\BOOKMARK [1][-]{appendix.A}{Deriving the ELBO}{}% 32
+\BOOKMARK [2][-]{subsection.A.1}{The problem}{appendix.A}% 33
+\BOOKMARK [2][-]{subsection.A.2}{Important formulae}{appendix.A}% 34
+\BOOKMARK [3][-]{subsubsection.A.2.1}{Jensen's inequality}{subsection.A.2}% 35
+\BOOKMARK [3][-]{subsubsection.A.2.2}{Expected value}{subsection.A.2}% 36
+\BOOKMARK [3][-]{subsubsection.A.2.3}{Logarithms}{subsection.A.2}% 37
+\BOOKMARK [2][-]{subsection.A.3}{Derivation of variational bound}{appendix.A}% 38
+\BOOKMARK [1][-]{appendix.B}{Deriving Variational Updates}{}% 39
+\BOOKMARK [2][-]{subsection.B.1}{Mean Field Approximation }{appendix.B}% 40
+\BOOKMARK [2][-]{subsection.B.2}{Conjugacy}{appendix.B}% 41
+\BOOKMARK [2][-]{subsection.B.3}{Alternative Form}{appendix.B}% 42
+\BOOKMARK [1][-]{appendix.C}{Derivation of Updates}{}% 43

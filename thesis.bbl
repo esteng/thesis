@@ -1,5 +1,17 @@
 \begin{thebibliography}{}
 
+\bibitem[Adams, 2005]{adams:2005}
+Adams, M. (2005).
+\newblock The promise of automatic speech recognition for fostering literacy
+  growth in children and adults.
+\newblock {\em Handbook of literacy and technology}, 2:109--128.
+
+\bibitem[Besacier et~al., 2014]{besacier:2014}
+Besacier, L., Barnard, E., Karpov, A., and Schultz, T. (2014).
+\newblock Automatic speech recognition for under-resourced languages: {A}
+  survey.
+\newblock {\em Speech Communication}, 56:85--100.
+
 \bibitem[Bishop, 2006]{bishop:2006}
 Bishop, C.~M. (2006).
 \newblock {\em Pattern recognition and machine learning}.
@@ -83,11 +95,24 @@ Ondel, L., Burget, L., and {\v{C}}ernock{\`y}, J. (2016).
 \newblock Variational inference for acoustic unit discovery.
 \newblock {\em Procedia Computer Science}, 81:80--86.
 
+\bibitem[Park and Glass, 2008]{park:2008}
+Park, A.~S. and Glass, J.~R. (2008).
+\newblock Unsupervised pattern discovery in speech.
+\newblock {\em IEEE Transactions on Audio, Speech, and Language Processing},
+  16(1):186--197.
+
 \bibitem[Pitman and Yor, 1997]{pitman:1997}
 Pitman, J. and Yor, M. (1997).
 \newblock The two-parameter {P}oisson-{D}irichlet distribution derived from a
   stable subordinator.
 \newblock {\em The Annals of Probability}, pages 855--900.
+
+\bibitem[Plauche et~al., 2006]{plauche:2006}
+Plauche, M., Nallasamy, U., Pal, J., Wooters, C., and Ramachandran, D. (2006).
+\newblock Speech recognition for illiterate access to information and
+  technology.
+\newblock In {\em Information and Communication Technologies and Development,
+  2006. ICTD'06. International Conference on}, pages 83--92. IEEE.
 
 \bibitem[Rabiner and Juang, 1986]{rabiner:1986}
 Rabiner, L. and Juang, B. (1986).
@@ -106,5 +131,11 @@ Zhai, K., Boyd-Graber, J., and Cohen, S.~B. (2014).
 \newblock Online adaptor grammars with hybrid inference.
 \newblock {\em Transactions of the Association for Computational Linguistics},
   2:465--476.
+
+\bibitem[Zhang et~al., 2013]{zhang:2013}
+Zhang, Y. et~al. (2013).
+\newblock {\em Unsupervised speech processing with applications to
+  query-by-example spoken term detection}.
+\newblock PhD thesis, Massachusetts Institute of Technology.
 
 \end{thebibliography}
