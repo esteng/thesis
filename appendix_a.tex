@@ -8,19 +8,17 @@ like to find a posterior distribution: $P(Z \mid  X)$. Using
 Bayes’ Rule, we get:
 $P(Z\mid X) = \frac{P(X\mid Z)P(Z)}{P(X)} = \frac{P(X\mid Z)P(Z)}{\sum\limits_{\forall Z} P(X\mid Z) P(Z)}$
 We call the numerator of the fraction on the right the “generative
-model”. It is composed of the product of the likelihood *of the
-hypothesis* ($P(X\mid Z)$) and the prior probability of the hypothesis
+model”. It is composed of the product of the likelihood \textit{of the
+hypothesis} ($P(X\mid Z)$) and the prior probability of the hypothesis
 ($P(Z)$). Note that the former is not a probability but a measure of how
 well our hypothesis fits the data. The denominator is the ``marginal
 likelihood'' of the data, $P(X)$. To find this, we need to marginalize
 out (sum over) all possible hypotheses. Because the hypotheses are the
 range of values for all of the latent variables in our model, this
-summation is computationally intractable. In order to obtain a
-posterior, we are forced to use some approximate means of finding this
-denominator. Often, a sampling approach is used. However, sampling can
+summation is computationally intractable. Instead of explicitly computing the posterior, we are forced t ofind an approximation of it. Often, a sampling approach is used. However, sampling can
 be very slow to converge and is not easily parallelizable across
 multiple cores. The variational Bayesian approach, on the other hand,
-treats the problem of finding an appropriate marginal distribution as an
+treats the problem of finding an appropriate posterior distribution as an
 optimization problem.
 
  \begin{itemize}
@@ -48,12 +46,13 @@ We are using the logarithm of the probability, so the function is actually conca
     \begin{align}\log(\mathbb{E}[X]) \geq \mathbb{E}[\log(X)] \end{align}
 
 \subsubsection{Expected value}
-Note that for discrete random variables (which we are dealing with in this case)
+\label{expectedvalue}
+Note that for discrete random variables 
 \begin{align} \mathbb{E}_q(f(x)) = \sum\limits_{\forall x} q(x)f(x) \end{align}
 
 \subsubsection{Logarithms}
 
-Throughout this derivation (and the variational literature as a whole) the logarithm of the probability is used. There are various reasons to do this. Firstly, taking the logarithm allows us to use information-theoretic measures such as entropy. Furthermore, logarithms allow us to transform expensive multiplication and division into cheaper addition and subtraction, and helps when working with probabilities below the floating-point precision bound. Recall some facts about logarithms:
+Throughout this derivation (and the variational literature as a whole) the logarithm of the probability is used. There are various reasons to do this. Firstly, taking the logarithm allows us to use information-theoretic measures such as entropy. Furthermore, logarithms allow us to transform expensive multiplication and division into cheaper addition and subtraction, and help when working with probabilities below the floating-point precision bound. Recall some facts about logarithms:
 
 \begin{itemize}
 
@@ -65,21 +64,18 @@ Throughout this derivation (and the variational literature as a whole) the logar
 
 \subsection{Derivation of variational bound}
 
-The value we are looking to approximate is our denominator, which is the
-likelihood of the data integrated over all hypotheses. Recall that our
+The value we are looking to approximate is our posterior, which is the
+likelihood of the latent variables given the data. Recall that our
 inference problem lies in finding the denominator to the Bayesian
 equation
 $P(Z\mid X) = \frac{P(X\mid Z)P(Z)}{\int\limits_{\forall Z} P(X\mid Z) P(Z) dZ}$
 Our hypotheses in this case are possible values for the latent variables
 in the model. This integral (or in the discrete case, summation) is often
-computationally intractable, so we use a variational approximation for
-it.\
-One way we can do this is by using the Kullback Leibler (KL) divergence between this
-intractable integral and some variational distribution $q$.\
+computationally intractable, so we introduce a variational approximation for it. One way we can do this is by using the Kullback Leibler (KL) divergence between this intractable integral and some variational distribution $q$.\
 
 \begin{enumerate}
 \item Let $q_\nu(Z)$ be a family of variational distributions with variational parameter $\nu$.
-\item to get the marginal likelihood ($\log\ p(X\mid \Phi)$) we will take the KL divergence between $q_\nu(Z)$ and $p(Z\mid X,\Phi)$.
+\item to get the marginal likelihood ($\log\ p(X\mid \Phi)$) we take the KL divergence between $q_\nu(Z)$ and $p(Z\mid X,\Phi)$.
 \item KL divergence is given by:
 \begin{align}
 \nonumber D_{KL}(q_\nu (Z) \mid \mid  p(Z\mid X,\Phi)) = \mathbb{E}_q[\log\ \frac{q_\nu(Z)}{p(Z\mid X,\Phi)}] \\
@@ -99,7 +95,6 @@ If we think about what KL divergence represents, we can intuitively understand w
 \nonumber - \log\ p(X\mid \Phi) \leq \mathbb{E}_q [\log\ q_\nu(Z)] - \mathbb{E}_q [\log\ p(Z,X\mid \Phi)]  \\
 \log\ p(X\mid \Phi) \geq \mathbb{E}_q [\log\ p(Z,X\mid \Phi)] - \mathbb{E}_q [\log\ q_\nu(Z)] 
 \end{align}
-
 
 Another way to reach this same equation is by using Jensen's inequality. Consider the log marginal likelihood:
 
@@ -136,4 +131,4 @@ This derivation yields an important fact:
 From this equation, we can see why minimizing KL divergence gives us the best possible value for our marginal likelihood.
 
 
-
+\input{appendix_b}

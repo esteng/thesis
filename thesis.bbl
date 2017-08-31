@@ -28,12 +28,23 @@ Blei, D.~M., Kucukelbir, A., and McAuliffe, J.~D. (2017).
 \newblock {\em Journal of the American Statistical Association},
   (just-accepted).
 
+\bibitem[Cohen, 2011]{cohen:dissertation}
+Cohen, S. (2011).
+\newblock {\em Computational {L}earning of {P}robabilistic {G}rammars in the
+  {U}nsupervised {S}etting}.
+\newblock PhD thesis, Ph. D. thesis, Carnegie Mellon University.
+
 \bibitem[Cohen et~al., 2010]{cohen:2010}
 Cohen, S.~B., Blei, D.~M., and Smith, N.~A. (2010).
 \newblock Variational inference for adaptor grammars.
 \newblock In {\em Human Language Technologies: The 2010 Annual Conference of
   the North American Chapter of the Association for Computational Linguistics},
   pages 564--572. Association for Computational Linguistics.
+
+\bibitem[Consortium et~al., 1993]{timit}
+Consortium, L.~D. et~al. (1993).
+\newblock Timit acoustic-phonetic continuous speech corpus.
+\newblock {\em URL http://www. ldc. upenn. edu/Catalog/CatalogEntry. jsp}.
 
 \bibitem[Dempster et~al., 1977]{dempster:1977}
 Dempster, A.~P., Laird, N.~M., and Rubin, D.~B. (1977).
@@ -90,6 +101,12 @@ Neal, R.~M. and Hinton, G.~E. (1998).
   and other variants.
 \newblock In {\em Learning in graphical models}, pages 355--368. Springer.
 
+\bibitem[O'Donnell, 2015]{odonnell:2015}
+O'Donnell, T.~J. (2015).
+\newblock {\em Productivity and reuse in language: A theory of linguistic
+  computation and storage}.
+\newblock MIT Press.
+
 \bibitem[Ondel et~al., 2016]{ondel:2016}
 Ondel, L., Burget, L., and {\v{C}}ernock{\`y}, J. (2016).
 \newblock Variational inference for acoustic unit discovery.
@@ -118,6 +135,11 @@ Plauche, M., Nallasamy, U., Pal, J., Wooters, C., and Ramachandran, D. (2006).
 Rabiner, L. and Juang, B. (1986).
 \newblock An introduction to hidden {M}arkov models.
 \newblock {\em ieee assp magazine}, 3(1):4--16.
+
+\bibitem[Sethuraman, 1994]{sethuraman:1994}
+Sethuraman, J. (1994).
+\newblock A constructive definition of dirichlet priors.
+\newblock {\em Statistica sinica}, pages 639--650.
 
 \bibitem[Zhai et~al., 2012]{zhai:2012}
 Zhai, K., Boyd-Graber, J., Asadi, N., and Alkhouja, M.~L. (2012).

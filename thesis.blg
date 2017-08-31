@@ -12,49 +12,47 @@ Repeated entry---line 45 of file thesis.bib
  : @article{blei:2006
  :                   ,
 I'm skipping whatever remains of this entry
-Warning--I didn't find a database entry for "cohen:dissertation"
-Warning--I didn't find a database entry for "johnson:2009"
 Warning--there's a number but no volume in blei:2017
 Warning--can't use both volume and number fields in levenshtein:1966
-You've used 23 entries,
+You've used 27 entries,
             1935 wiz_defined-function locations,
-            615 strings with 7932 characters,
-and the built_in function-call counts, 10254 in all, are:
-= -- 1054
-> -- 360
-< -- 22
-+ -- 128
-- -- 118
-* -- 807
-:= -- 1675
-add.period$ -- 74
-call.type$ -- 23
-change.case$ -- 170
-chr.to.int$ -- 23
-cite$ -- 25
-duplicate$ -- 433
-empty$ -- 743
-format.name$ -- 154
-if$ -- 2103
+            633 strings with 8445 characters,
+and the built_in function-call counts, 11556 in all, are:
+= -- 1186
+> -- 394
+< -- 27
++ -- 140
+- -- 128
+* -- 891
+:= -- 1905
+add.period$ -- 86
+call.type$ -- 27
+change.case$ -- 192
+chr.to.int$ -- 27
+cite$ -- 29
+duplicate$ -- 495
+empty$ -- 838
+format.name$ -- 169
+if$ -- 2364
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 24
-newline$ -- 118
-num.names$ -- 69
-pop$ -- 172
+missing$ -- 28
+newline$ -- 138
+num.names$ -- 81
+pop$ -- 194
 preamble$ -- 1
-purify$ -- 173
+purify$ -- 197
 quote$ -- 0
-skip$ -- 340
+skip$ -- 395
 stack$ -- 0
-substring$ -- 790
-swap$ -- 107
-text.length$ -- 11
+substring$ -- 872
+swap$ -- 120
+text.length$ -- 12
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 134
+type$ -- 156
 warning$ -- 2
-while$ -- 94
+while$ -- 105
 width$ -- 0
-write$ -- 306
+write$ -- 356
 (There were 2 error messages)

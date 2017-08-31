@@ -1,16 +1,18 @@
 
+\begin{figure}[h]
 
 \begin{minipage}[t]{.5\textwidth}
   \vspace{0pt} 
 \begin{algorithm}[H]
-\emph{constructing the PCFG}\\
+\label{algorithm3}
+\emph{\# constructing the PCFG}\\
 \lForEach{nonterminal $A$ in $N$}{\\
     draw rule weights $\theta_A \sim Dir(\alpha_A)$
 }
-\emph{constructing the grammatons $G_A$}\\
+\emph{\# constructing the grammatons $G_A$}\\
 \For{$A \in A_1,...,A_k$}{
     draw $\pi_A \sim PYP(a_A, b_A)$\\
-    \emph{construct tree $z_{A,i}$}\\
+    \emph{\# construct tree $z_{A,i}$}\\
     \For{$i \in \{1,\ldots\}$}{
         draw rule $A \rightarrow B_1 \ldots B_n$ from $R_A$\\
         set $z_{A,i}$ = \simpletree{$A$}{$B_1$}{$B_n$}{north}\\
@@ -21,7 +23,7 @@
             }
             \Else{
                 expand $B$ using $G_B$ \\
-                \emph{guaranteed to exist because of topological ordering}
+                \emph{\# guaranteed to exist because of topological ordering}
             }
         }
         \For{$i \in \{1,\ldots\}$}{
@@ -36,32 +38,33 @@
 \begin{minipage}[t]{.5\textwidth}
   \vspace{0pt} 
 \begin{algorithm}[H]
-\emph{generating derivation trees $z_i$}\\
-\For{$i \in \{1,\ldots,\mid X\mid\}$}{
-    draw $\pi_A \sim PYP(a_A, b_A)$\\
-    \emph{construct tree $z_{A,i}$}\\
-    \For{$i \in \{1,\ldots\}$}{
-        \If{$S$ is adapted nonterminal}{
-            draw $z_i \sim G_S$
+\label{algorithm4}
+\emph{\# generating derivation trees $z_i$}\\
+
+\For{$i \in \{1,\ldots\}$}{
+    \If{$S$ is adapted nonterminal}{
+        draw $z_i \sim G_S$
+    }
+    \Else{
+        draw $S \rightarrow B_1 \ldots B_n$ from $R_S$\\
+        set $z_i = $ \simpletree{$S$}{$B_1$}{$B_n$}{north}\\
+    }
+    \While{$z_{i}$ has nonterminals in leaves}{
+        choose a $B$ from $ B_1 \ldots B_n$\\
+        \If{$B$ is non-adapted nonterminal}{
+            expand $B$ using the PCFG\\
         }
         \Else{
-            draw $S \rightarrow B_1 \ldots B_n$ from $R_S$\\
-            set $z_i = $ \simpletree{$S$}{$B_1$}{$B_n$}{north}\\
-        }
-        \While{$z_{i}$ has nonterminals in leaves}{
-            choose a $B$ from $ B_1 \ldots B_n$\\
-            \If{$B$ is non-adapted nonterminal}{
-                expand $B$ using the PCFG\\
-            }
-            \Else{
-                expand $B$ using $G_B$ \\
-            }
+            expand $B$ using $G_B$ \\
         }
     }
-    set $x_i$ to the yield of tree $z_i$\\
 }
-\vspace{5.3em}
+set $x_i$ to the yield of tree $z_i$\\
+
+\vspace{11.41em}
 \caption{Generating data}
 \end{algorithm}
 
 \end{minipage}
+
+\end{figure}
