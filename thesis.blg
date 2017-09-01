@@ -14,45 +14,45 @@ Repeated entry---line 45 of file thesis.bib
 I'm skipping whatever remains of this entry
 Warning--there's a number but no volume in blei:2017
 Warning--can't use both volume and number fields in levenshtein:1966
-You've used 27 entries,
+You've used 26 entries,
             1935 wiz_defined-function locations,
-            633 strings with 8445 characters,
-and the built_in function-call counts, 11556 in all, are:
-= -- 1186
-> -- 394
-< -- 27
-+ -- 140
-- -- 128
-* -- 891
-:= -- 1905
-add.period$ -- 86
-call.type$ -- 27
-change.case$ -- 192
-chr.to.int$ -- 27
-cite$ -- 29
-duplicate$ -- 495
-empty$ -- 838
-format.name$ -- 169
-if$ -- 2364
+            628 strings with 8294 characters,
+and the built_in function-call counts, 11250 in all, are:
+= -- 1156
+> -- 381
+< -- 26
++ -- 136
+- -- 124
+* -- 870
+:= -- 1847
+add.period$ -- 83
+call.type$ -- 26
+change.case$ -- 186
+chr.to.int$ -- 26
+cite$ -- 28
+duplicate$ -- 482
+empty$ -- 818
+format.name$ -- 163
+if$ -- 2305
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 28
-newline$ -- 138
-num.names$ -- 81
-pop$ -- 194
+missing$ -- 27
+newline$ -- 133
+num.names$ -- 78
+pop$ -- 189
 preamble$ -- 1
-purify$ -- 197
+purify$ -- 191
 quote$ -- 0
-skip$ -- 395
+skip$ -- 383
 stack$ -- 0
-substring$ -- 872
-swap$ -- 120
+substring$ -- 860
+swap$ -- 119
 text.length$ -- 12
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 156
+type$ -- 150
 warning$ -- 2
-while$ -- 105
+while$ -- 103
 width$ -- 0
-write$ -- 356
+write$ -- 344
 (There were 2 error messages)

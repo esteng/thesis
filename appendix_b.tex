@@ -5,14 +5,14 @@
 
 \subsection{Mean Field Approximation }
 
-Recall our mean-field assumption was to treat each variational distribution as conditionally independent: $q(Z) = \prod\limits_{i} q_i(z_i)$; also recall that our bound on the log marginal likelihood was:
+Recall our mean-field assumption was to treat each variational distribution as conditionally independent, i.e. $q(Z) = \prod\limits_{i} q_i(z_i)$. Also recall that our bound on the log marginal likelihood was:
 
 
 \begin{align} 
 \nonumber \mathcal{L}(q) \geq \sum\limits_{z_i \in Z} q(Z) \log\ p(X,Z|\Phi) + H(q) \end{align}
 
 
-For the sake of concise notation, let $q_j = q_{\nu_j}(Z_j)$ and disregard the conditioner $\Phi$ for now. Replace $q(Z)$ with this approximating product:
+Replace $q(Z)$ with this product:
 
 \begin{align} 
 \nonumber \mathcal{L}(q) \geq \sum\limits_{z_i \in Z} \left( \prod\limits_{i} q_i(z_i) \right) \log\ p(X,Z|\Phi) + H(q) \\
@@ -43,11 +43,8 @@ where $a(\nu_i)$ is the cumulant function, which for the first three derivatives
 \end{align} 
 
 
-Note that $\mathbb{E}_q[\nu_i^Tz_i] = \nu_i^T a'(\nu_i)$ since $E_q(z_i) = a'(\nu_i)$ and $\nu_i^T$ factors out as a constant when taking the expectation with respect to $q$. The goal of variational inference is to cast the intractable calculation of the posterior as an optimization problem. In most optimization problems, there are two general steps: 
-\begin{enumerate}
-    \item computing an objective function which allows us to 
-    \item optimize the function by adjusting the parameters. 
-\end{enumerate} 
+Note that $\mathbb{E}_q[\nu_i^Tz_i] = \nu_i^T a'(\nu_i)$ since $E_q(z_i) = a'(\nu_i)$ and $\nu_i^T$ factors out as a constant when taking the expectation with respect to $q$. The goal of variational inference is to cast the intractable calculation of the posterior as an optimization problem. In most optimization problems, there are two general steps: (1) computing an objective function which allows us to (2) optimize the function by adjusting the parameters. 
+
 
 Recall that to avoid expensive computations, we employ exponential family distributions which allow us to simplify the problem. Our goal is to optimize the function by adjusting the variational parameters, so we take the partial derivative of our function with respect to $\nu_i$: 
 
@@ -129,7 +126,7 @@ P(z_i | X,Z_{-i},\Phi) = P_{\pi}\big(z_i | \phi_1 + \sum\limits_{z_n \in Z_{-i}}
 This means that the natural parameters of the posterior distribution on global hidden variables has the natural parameters $\phi_2 + \sum\limits_{z_n \in Z_{-i}} t(x_n, z_n)$ and $\phi_2 + N$, giving us a closed form for our expectation in \eqref{expectation_of_g}: 
 
 \begin{align}
-\mathbb{E}_q[g_i(Z_{-i}, X, \Phi)] = \mathbb{E}_q \begin{bmatrix} \phi1 + \sum\limits_{z_n \in Z_{-i}} t(x_n, z_n) \\ \phi_2 + N \end{bmatrix}
+\mathbb{E}_q[g_i(Z_{-i}, X, \Phi)] = \mathbb{E}_q \begin{bmatrix} \phi_1 + \sum\limits_{z_n \in Z_{-i}} t(x_n, z_n) \\ \phi_2 + N \end{bmatrix}
 \end{align}
 
 \citep{hoffman:2013}

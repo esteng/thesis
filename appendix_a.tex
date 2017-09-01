@@ -15,7 +15,7 @@ well our hypothesis fits the data. The denominator is the ``marginal
 likelihood'' of the data, $P(X)$. To find this, we need to marginalize
 out (sum over) all possible hypotheses. Because the hypotheses are the
 range of values for all of the latent variables in our model, this
-summation is computationally intractable. Instead of explicitly computing the posterior, we are forced t ofind an approximation of it. Often, a sampling approach is used. However, sampling can
+summation is computationally intractable. Instead of explicitly computing the posterior, we are forced to find an approximation of it. Often, a sampling approach is used. However, sampling can
 be very slow to converge and is not easily parallelizable across
 multiple cores. The variational Bayesian approach, on the other hand,
 treats the problem of finding an appropriate posterior distribution as an
@@ -52,7 +52,7 @@ Note that for discrete random variables
 
 \subsubsection{Logarithms}
 
-Throughout this derivation (and the variational literature as a whole) the logarithm of the probability is used. There are various reasons to do this. Firstly, taking the logarithm allows us to use information-theoretic measures such as entropy. Furthermore, logarithms allow us to transform expensive multiplication and division into cheaper addition and subtraction, and help when working with probabilities below the floating-point precision bound. Recall some facts about logarithms:
+Throughout this derivation (and the variational literature as a whole) the logarithm of the probability is used. There are various reasons to do this. Firstly, logarithms are the foundation of information-theoretic measures such as entropy. Furthermore, they allow us to transform expensive multiplication and division into cheaper addition and subtraction, and help when working with probabilities below the floating-point precision bound. Recall these facts about logarithms:
 
 \begin{itemize}
 
@@ -68,7 +68,7 @@ The value we are looking to approximate is our posterior, which is the
 likelihood of the latent variables given the data. Recall that our
 inference problem lies in finding the denominator to the Bayesian
 equation
-$P(Z\mid X) = \frac{P(X\mid Z)P(Z)}{\int\limits_{\forall Z} P(X\mid Z) P(Z) dZ}$
+$$P(Z\mid X) = \frac{P(X\mid Z)P(Z)}{\int\limits_{\forall Z} P(X\mid Z) P(Z) dZ}$$
 Our hypotheses in this case are possible values for the latent variables
 in the model. This integral (or in the discrete case, summation) is often
 computationally intractable, so we introduce a variational approximation for it. One way we can do this is by using the Kullback Leibler (KL) divergence between this intractable integral and some variational distribution $q$.\
@@ -87,7 +87,7 @@ computationally intractable, so we introduce a variational approximation for it.
 \citep{blei:2006} 
 
 \end{enumerate}
-If we think about what KL divergence represents, we can intuitively understand why it cannot be negative. From here, we can see how minimizing this equation is the same as maximizing the lower bound on $\log\ p(X\mid \Phi)$:
+Considering what KL divergence represents, it is easy to understand why it cannot be negative. From here, we can see how minimizing this equation is the same as maximizing the lower bound on $\log\ p(X\mid \Phi)$:
 
 
 \begin{align}
@@ -96,10 +96,10 @@ If we think about what KL divergence represents, we can intuitively understand w
 \log\ p(X\mid \Phi) \geq \mathbb{E}_q [\log\ p(Z,X\mid \Phi)] - \mathbb{E}_q [\log\ q_\nu(Z)] 
 \end{align}
 
-Another way to reach this same equation is by using Jensen's inequality. Consider the log marginal likelihood:
+Another method of reaching this same result uses Jensen's inequality. Consider the log marginal likelihood:
 
 \begin{align}\log\ p(X\mid \Phi) = \log\ \sum\limits_{z \in \mathbf{Z}} p(X,z\mid \Phi)\end{align}
-The sum marginalizes out the hidden variables $z$ in the joint probability distribution. Picking any variational distribution $q(z)$ we can multiply them by $\frac{q(z)}{q(z)}$:
+The sum marginalizes out the hidden variables $z$ in the joint probability distribution. Picking any variational distribution $q(z)$ we can multiply by $\frac{q(z)}{q(z)}$:
 
 
 \begin{align} \log\ \sum\limits_{\forall z \in \mathbf{Z}} ( p(x,z\mid \Phi) * \frac{q(z)}{q(z)} ) = \log\ \sum\limits_{\forall z \in \mathbf{Z}} q(z) \frac{ p(x,z\mid \Phi) }{q(z)}\end{align}

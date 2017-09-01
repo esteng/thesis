@@ -41,11 +41,6 @@ Cohen, S.~B., Blei, D.~M., and Smith, N.~A. (2010).
   the North American Chapter of the Association for Computational Linguistics},
   pages 564--572. Association for Computational Linguistics.
 
-\bibitem[Consortium et~al., 1993]{timit}
-Consortium, L.~D. et~al. (1993).
-\newblock Timit acoustic-phonetic continuous speech corpus.
-\newblock {\em URL http://www. ldc. upenn. edu/Catalog/CatalogEntry. jsp}.
-
 \bibitem[Dempster et~al., 1977]{dempster:1977}
 Dempster, A.~P., Laird, N.~M., and Rubin, D.~B. (1977).
 \newblock Maximum likelihood from incomplete data via the {E}{M} algorithm.
